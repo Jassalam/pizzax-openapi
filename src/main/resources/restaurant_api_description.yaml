@@ -1,0 +1,130 @@
+openapi: 3.0.3
+info:
+  title: Restaurant API Specification for restaurant operations
+  description: |-
+    A simple restaurant API that allows four operations:
+    - get restaurant by id
+    - add new restaurant 
+    - update restaurant by id
+    - delete restuarant by id
+  version: 1.0-SNAPSHOT
+servers:
+  - url: https://testenvironment.org/api/v1
+  - url: https://prodenvironment.org/api/v1
+tags:
+  - name: restaurants
+    description: Delivery system in restaurants
+
+paths:
+  /restaurant:
+    get:
+      tags:
+        - restaurants
+      summary: Get restaurant information
+      description: Get restaurant information using restaurant id
+      operationId: getRestaurant
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        404:
+          description: Restaurant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantNotFoundError'
+  /restaurant/new:
+    post:
+      summary: Add a new Restaurant
+      requestBody:
+        description: Add detail of restaurant
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRestaurant'
+      responses:
+        204:
+          description: Success
+        404:
+          description: Restaurant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantNotFoundError'
+  /restaurant/{id}:
+    put:
+      tags:
+        - restaurant
+      summary: update restaurant by id
+      description: Update restaurant information using restaurant id
+      operationId: updateRestaurant
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateRestaurant'
+        404:
+          description: Restaurant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantNotFoundError'
+  /restaurant/{Id}:
+    delete:
+      summary: Delete a restaurant
+      parameters:
+        - in: path
+          name: Id
+          required: true
+      responses:
+        204:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteRestaurant'
+        404:
+          description: Restaurant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantNotFoundError'
+components:
+  schemas:
+    Restaurant:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        address:
+          type: string
+        zipcode:
+          type: number
+    RestaurantNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+    CreateRestaurant:
+      type: object
+      properties:
+        Restaurant:
+          type: object
+    UpdateRestaurant:
+      type: object
+      properties:
+        restaurantId:
+          type: number
+    DeleteRestaurant:
+      type: object
+      properties:
+        restaurantId:
+          type: number
